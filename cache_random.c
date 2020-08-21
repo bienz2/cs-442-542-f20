@@ -64,6 +64,9 @@ int main(int argc, char* argv[])
     clock_t start_c = get_clockticks();
     double start = get_time();
 
+
+    printf("%f, %lu\n", scale, start_c);
+
     // Stepping through the arrays pos and vals.  We are stepping through the vals array 
     // in a random order, so if the array is large enough most accesses will be from main memory.
     // Must be random because of 'cache lines' which we will learn about for 08/21/20.
