@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     // Allocate n_threads pthread_t variables, and ints to hold ids
     int n_threads = atoi(argv[1]);
     pthread_t* threads = (pthread_t*)malloc(n_threads*sizeof(pthread_t));
-    int* thread_ids = (int*)malloc(n_threads*sizeof(pthread_t));
+    int* thread_ids = (int*)malloc(n_threads*sizeof(int));
 
 
     // Create pthreads, passing thread_id for each
