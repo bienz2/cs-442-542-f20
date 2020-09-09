@@ -55,6 +55,27 @@ void matmat_flt(int n, float** restrict A, float** restrict B, float** restrict 
     }
 }
 
+
+void matmat_split(int n, double** restrict A, double** restrict B, double** restrict C, int n_iter,
+        int start_i, int start_j,int start_k)
+{
+    double val;
+    for (int iter = 0; iter < n_iter; iter++)
+    {
+        for (int i = start_i; i < start_i+n; i++)
+        {
+            for (int j = start_j; j < start_j+n; j++)
+            {
+                val = A[i][j];
+                for (int k = start_k; k < start_k+n; k++)
+                {
+                    C[i][k] = val * B[j][k];
+                }
+            }
+        }
+    }
+}
+
 // This program runs matrix matrix multiplication with double pointers
 // Test vectorization improvements for both doubles and floats
 // Try with and without the restrict variables
@@ -140,6 +161,35 @@ int main(int argc, char* argv[])
         matmat_dbl(n, A, B, C, n_iter);
         end = get_time();
         printf("N %d, Time Per MatMat %e\n", n, (end - start)/n_iter);
+
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                A[i][j] = 1.0/i;
+                B[i][j] = 1.0;
+                C[i][j] = 0;
+            }
+        }
+
+        start = get_time();
+        int step = 50;
+        for (int s = 0; s < n; s += step)
+        {
+            for (int t = 0; t < n; t+= step)
+            {
+               for (int u = 0; u < n; u += step)
+               {
+                    matmat_split(step, A, B, C, n_iter, s, t, u);
+               }
+            }
+        } 
+        end = get_time();
+        printf("N %d, Time Per MatMat %e\n", n, (end - start) / n_iter);
+
+
+
 
         for (int i = 0; i < n; i++)
         {

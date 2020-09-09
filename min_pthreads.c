@@ -5,10 +5,6 @@
 
 int min_value, local_list_size;
 pthread_mutex_t minimum_value_lock;
-
-
-// This method tries to find minimum without any locks
-// This is a race condition... you might get the wrong answer!
 void* find_min_race_condition(void* list_ptr)
 {
     int* list = (int*) list_ptr;
@@ -22,9 +18,6 @@ void* find_min_race_condition(void* list_ptr)
     return NULL;
 }
 
-
-// This method tries to find the minimum, locking inside the for loop
-// This is very expensive, but you will get the correct answer
 void* find_min_expensive(void *list_ptr)
 {
     int* list = (int*) list_ptr;
@@ -41,10 +34,6 @@ void* find_min_expensive(void *list_ptr)
     return NULL;
 }
 
-
-// This method finds the minimum for a local variable, and then
-// locks once to write to global variable
-// This method will get the correct answer
 void* find_min(void *list_ptr)
 {
     int* list = (int*) list_ptr;
@@ -83,18 +72,23 @@ int main(int argc, char *argv[])
     int n_outer = list_size / n_threads;
     srand(time(NULL));
     int min_val, min_pos;
-    list[0] = rand();
-    min_val = list[0];
-    min_pos = 0;
-    for (int i = 1; i < list_size; i++)
+
+    min_val = list_size;
+    int val = list_size;
+    for (int i = 0; i < n_outer; i++)
     {
-        list[i] = rand();
-        if (list[i] < min_val)
+        for (int j = 0; j < n_threads; j++)
         {
-            min_val = list[i];
-            min_pos = i;
+            list[j*n_outer + i] = val;
+            if (val < min_val)
+            {
+                min_val = val;
+                min_pos = j*n_outer+i;
+            }
+            val--;
         }
     }
+
     printf("Actual Minimum Value %d at Position %d\n", min_val, min_pos);
 
     pthread_t* threads = (pthread_t*)malloc(n_threads*sizeof(pthread_t));
