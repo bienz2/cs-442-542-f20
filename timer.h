@@ -2,21 +2,6 @@
 #include <sys/time.h>
 #include <stdio.h>
 
-// Returns a clockticks variable
-clock_t get_clockticks()
-{
-    clock_t t1;
-    return clock();
-}
-
-// Returns the number of seconds that elapsed during the program
-// Ignores other programs (or OS) that may interrupt
-// May also ignore other threads of this program, if used in multithreaded (parallel) setting
-double get_clock_seconds(clock_t start, clock_t end)
-{
-    return (end - start) / (double)CLOCKS_PER_SEC;
-}
-
 // Returns the current time of the day
 double get_time()
 {
