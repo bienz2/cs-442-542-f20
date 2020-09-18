@@ -1,0 +1,119 @@
+117 dynamic_trace_events
+# FunctionId Group Tag "Name Type" Parameters
+1 TAUEVENT 0 ".TAU <unknown event>" TriggerValue
+2 TAU_DEFAULT 0 ".TAU application " EntryExit
+115 TRACER 0 "CONT_EVENT" none
+33 TAUEVENT 0 "CPU Cores | 4" TriggerValue
+34 TAUEVENT 0 "CPU MHz | 1600.000" TriggerValue
+35 TAUEVENT 0 "CPU Type | Intel(R) Xeon(R) CPU X5550 @ 2.67GHz" TriggerValue
+36 TAUEVENT 0 "CPU Vendor | GenuineIntel" TriggerValue
+37 TAUEVENT 0 "CWD | /users/bienz/cs-442-542-f20" TriggerValue
+38 TAUEVENT 0 "Cache Size | 8192 KB" TriggerValue
+39 TAUEVENT 0 "Command Line | ./matmat 100" TriggerValue
+110 TRACER 0 "EV_INIT" none
+40 TAUEVENT 0 "Executable | /users/bienz/cs-442-542-f20/matmat" TriggerValue
+111 TRACER 0 "FLUSH" EntryExit
+112 TRACER 0 "FLUSH_CLOSE" none
+113 TRACER 0 "FLUSH_INITM" none
+41 TAUEVENT 0 "Hostname | wheeler-sn" TriggerValue
+42 TAUEVENT 0 "Local Time | 2020-09-17T17:22:59-06:00" TriggerValue
+117 TAU_MESSAGE -8 "MESSAGE_RECV" par
+116 TAU_MESSAGE -7 "MESSAGE_SEND" par
+43 TAUEVENT 0 "Memory Size | 49282560 kB" TriggerValue
+44 TAUEVENT 0 "Node Name | wheeler-sn" TriggerValue
+45 TAUEVENT 0 "OMP_CHUNK_SIZE | 1" TriggerValue
+46 TAUEVENT 0 "OMP_DYNAMIC | FALSE" TriggerValue
+47 TAUEVENT 0 "OMP_MAX_ACTIVE_LEVELS | 2147483647" TriggerValue
+48 TAUEVENT 0 "OMP_MAX_THREADS | 8" TriggerValue
+49 TAUEVENT 0 "OMP_NUM_PROCS | 8" TriggerValue
+50 TAUEVENT 0 "OMP_SCHEDULE | DYNAMIC" TriggerValue
+51 TAUEVENT 0 "OMP_THREAD_LIMIT | 2147483647" TriggerValue
+52 TAUEVENT 0 "OS Machine | x86_64" TriggerValue
+53 TAUEVENT 0 "OS Name | Linux" TriggerValue
+54 TAUEVENT 0 "OS Release | 3.10.0-1062.18.1.el7.x86_64" TriggerValue
+55 TAUEVENT 0 "OS Version | #1 SMP Tue Mar 17 23:49:17 UTC 2020" TriggerValue
+57 TAUEVENT 0 "OpenMP Version String | 201107" TriggerValue
+56 TAUEVENT 0 "OpenMP Version | 3.1" TriggerValue
+58 TAUEVENT 0 "Starting Timestamp | 1600384979128403" TriggerValue
+59 TAUEVENT 0 "TAU Architecture | default" TriggerValue
+60 TAUEVENT 0 "TAU Config |  -openmp -opari" TriggerValue
+61 TAUEVENT 0 "TAU Makefile | /users/bienz/tau/x86_64/lib/Makefile.tau-openmp-opari" TriggerValue
+62 TAUEVENT 0 "TAU Version | 2.29.1-git" TriggerValue
+63 TAUEVENT 0 "TAU_BFD_LOOKUP | on" TriggerValue
+64 TAUEVENT 0 "TAU_CALLPATH_DEPTH | 2" TriggerValue
+65 TAUEVENT 0 "TAU_CALLSITE | on" TriggerValue
+66 TAUEVENT 0 "TAU_CALLSITE_DEPTH | 1" TriggerValue
+67 TAUEVENT 0 "TAU_CUDA_BINARY_EXE | " TriggerValue
+68 TAUEVENT 0 "TAU_CUPTI_API | runtime" TriggerValue
+69 TAUEVENT 0 "TAU_EBS_KEEP_UNRESOLVED_ADDR | off" TriggerValue
+70 TAUEVENT 0 "TAU_IBM_BG_HWP_COUNTERS | off" TriggerValue
+71 TAUEVENT 0 "TAU_MAX_THREADS | 128" TriggerValue
+72 TAUEVENT 0 "TAU_MEASURE_TAU | off" TriggerValue
+73 TAUEVENT 0 "TAU_MEMDBG_PROTECT_ABOVE | off" TriggerValue
+74 TAUEVENT 0 "TAU_MEMDBG_PROTECT_BELOW | off" TriggerValue
+75 TAUEVENT 0 "TAU_MEMDBG_PROTECT_FREE | off" TriggerValue
+76 TAUEVENT 0 "TAU_OPENMP_RUNTIME | on" TriggerValue
+77 TAUEVENT 0 "TAU_OPENMP_RUNTIME_EVENTS | on" TriggerValue
+78 TAUEVENT 0 "TAU_OPENMP_RUNTIME_STATES | off" TriggerValue
+79 TAUEVENT 0 "TAU_OUTPUT_CUDA_CSV | off" TriggerValue
+80 TAUEVENT 0 "TAU_PAPI_MULTIPLEXING | off" TriggerValue
+81 TAUEVENT 0 "TAU_PROFILE | off" TriggerValue
+82 TAUEVENT 0 "TAU_PROFILE_FORMAT | profile" TriggerValue
+83 TAUEVENT 0 "TAU_RECYCLE_THREADS | off" TriggerValue
+84 TAUEVENT 0 "TAU_REGION_ADDRESSES | off" TriggerValue
+85 TAUEVENT 0 "TAU_SAMPLING | off" TriggerValue
+86 TAUEVENT 0 "TAU_SHOW_MEMORY_FUNCTIONS | off" TriggerValue
+87 TAUEVENT 0 "TAU_SIGNALS_GDB | off" TriggerValue
+88 TAUEVENT 0 "TAU_SYNCHRONIZE_CLOCKS | off" TriggerValue
+89 TAUEVENT 0 "TAU_THROTTLE | on" TriggerValue
+90 TAUEVENT 0 "TAU_THROTTLE_NUMCALLS | 100000" TriggerValue
+91 TAUEVENT 0 "TAU_THROTTLE_PERCALL | 10" TriggerValue
+92 TAUEVENT 0 "TAU_TRACE | on" TriggerValue
+93 TAUEVENT 0 "TAU_TRACE_FORMAT | tau" TriggerValue
+94 TAUEVENT 0 "TAU_TRACK_CUDA_CDP | off" TriggerValue
+95 TAUEVENT 0 "TAU_TRACK_CUDA_ENV | off" TriggerValue
+96 TAUEVENT 0 "TAU_TRACK_CUDA_INSTRUCTIONS | " TriggerValue
+97 TAUEVENT 0 "TAU_TRACK_CUDA_SASS | off" TriggerValue
+98 TAUEVENT 0 "TAU_TRACK_HEADROOM | off" TriggerValue
+99 TAUEVENT 0 "TAU_TRACK_HEAP | off" TriggerValue
+100 TAUEVENT 0 "TAU_TRACK_IO_PARAMS | off" TriggerValue
+101 TAUEVENT 0 "TAU_TRACK_MEMORY_FOOTPRINT | off" TriggerValue
+102 TAUEVENT 0 "TAU_TRACK_MEMORY_LEAKS | off" TriggerValue
+103 TAUEVENT 0 "TAU_TRACK_SIGNALS | off" TriggerValue
+104 TAUEVENT 0 "TAU_TRACK_UNIFIED_MEMORY | off" TriggerValue
+105 TAUEVENT 0 "Timestamp | 1600384979128556" TriggerValue
+106 TAUEVENT 0 "UTC Time | 2020-09-17T23:22:59Z" TriggerValue
+114 TRACER 0 "WALL_CLOCK" none
+27 TAU_CALLSITE 0 "[CALLSITE] get_time  [@] [main] [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {116}] " EntryExit
+30 TAU_CALLSITE 0 "[CALLSITE] get_time  [@] [main] [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {118}] " EntryExit
+4 TAU_CALLSITE 0 "[CALLSITE] main  [@] [__libc_start_main] [{/usr/src/debug/glibc-2.17-c758a686/csu/../csu/libc-start.c} {266}] " EntryExit
+17 TAU_CALLSITE 0 "[CALLSITE] matmat  [@] [main] [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {114}] " EntryExit
+28 TAU_CALLSITE 0 "[CALLSITE] matmat  [@] [main] [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {117}] " EntryExit
+14 TAU_CALLSITE 0 "[CALLSITE] parallelfor (barrier enter/exit)  " EntryExit
+15 TAU_CALLSITE 0 "[CALLSITE] parallelfor (barrier enter/exit)  [@] [main] [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {91}] " EntryExit
+25 TAU_CALLSITE 0 "[CALLSITE] parallelfor (barrier enter/exit)  [@] [matmat] [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {29}] " EntryExit
+11 TAU_CALLSITE 0 "[CALLSITE] parallelfor (loop body)  " EntryExit
+12 TAU_CALLSITE 0 "[CALLSITE] parallelfor (loop body)  [@] [main] [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {91}] " EntryExit
+23 TAU_CALLSITE 0 "[CALLSITE] parallelfor (loop body)  [@] [matmat] [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {29}] " EntryExit
+9 TAU_CALLSITE 0 "[CALLSITE] parallelfor (parallel begin/end)  " EntryExit
+8 TAU_CALLSITE 0 "[CALLSITE] parallelfor (parallel begin/end)  [@] [main] [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {91}] " EntryExit
+21 TAU_CALLSITE 0 "[CALLSITE] parallelfor (parallel begin/end)  [@] [matmat] [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {29}] " EntryExit
+6 TAU_CALLSITE 0 "[CALLSITE] parallelfor (parallel fork/join)  [@] [__libc_start_main] [{/usr/src/debug/glibc-2.17-c758a686/csu/../csu/libc-start.c} {266}] " EntryExit
+19 TAU_CALLSITE 0 "[CALLSITE] parallelfor (parallel fork/join)  [@] [main] [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {114}] " EntryExit
+29 TAU_CALLSITE 0 "[CALLSITE] parallelfor (parallel fork/join)  [@] [main] [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {117}] " EntryExit
+32 TAU_CALLSITE 0 "[CALLSITE] sum  [@] [main] [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {119}] " EntryExit
+26 TAU_DEFAULT 0 "get_time [{/users/bienz/cs-442-542-f20/timer.h} {7,0}] " EntryExit
+3 TAU_DEFAULT 0 "main [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {73,0}] " EntryExit
+16 TAU_DEFAULT 0 "matmat [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {18,0}] " EntryExit
+24 OpenMP 0 "parallelfor (barrier enter/exit) [OpenMP location: file:/users/bienz/cs-442-542-f20/matmat.c <23, 34>] " EntryExit
+13 OpenMP 0 "parallelfor (barrier enter/exit) [OpenMP location: file:/users/bienz/cs-442-542-f20/matmat.c <69, 78>] " EntryExit
+22 OpenMP 0 "parallelfor (loop body) [OpenMP location: file:/users/bienz/cs-442-542-f20/matmat.c <23, 34>] " EntryExit
+10 OpenMP 0 "parallelfor (loop body) [OpenMP location: file:/users/bienz/cs-442-542-f20/matmat.c <69, 78>] " EntryExit
+20 OpenMP 0 "parallelfor (parallel begin/end) [OpenMP location: file:/users/bienz/cs-442-542-f20/matmat.c <23, 34>] " EntryExit
+7 OpenMP 0 "parallelfor (parallel begin/end) [OpenMP location: file:/users/bienz/cs-442-542-f20/matmat.c <69, 78>] " EntryExit
+18 OpenMP 0 "parallelfor (parallel fork/join) [OpenMP location: file:/users/bienz/cs-442-542-f20/matmat.c <23, 34>] " EntryExit
+5 OpenMP 0 "parallelfor (parallel fork/join) [OpenMP location: file:/users/bienz/cs-442-542-f20/matmat.c <69, 78>] " EntryExit
+107 TAUEVENT 0 "pid | 11433" TriggerValue
+31 TAU_DEFAULT 0 "sum [{/users/bienz/cs-442-542-f20/matmat.pomp.c} {57,0}] " EntryExit
+108 TAUEVENT 0 "tid | 11433" TriggerValue
+109 TAUEVENT 0 "username | bienz" TriggerValue
