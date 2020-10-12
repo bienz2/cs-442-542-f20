@@ -25,8 +25,8 @@ void segfault_bug()
         size = rand() / (RAND_MAX/100);
         for (int j = 0; j < size; j++)
             send_buffer.push_back(rand());
-        MPI_Isend(&(send_buffer[ctr]), size, MPI_INT, i, tag, MPI_COMM_WORLD, &(send_req[i]));
         ctr += size;
+        MPI_Isend(&(send_buffer[ctr]), size, MPI_INT, i, tag, MPI_COMM_WORLD, &(send_req[i]));
     }
 
     for (int i = 0; i < num_procs; i++)
@@ -38,7 +38,7 @@ void segfault_bug()
         MPI_Recv(recv_buffer.data(), size, MPI_INT, proc, tag, MPI_COMM_WORLD, &recv_status);
     }
 
-    MPI_Waitall(num_procs, send_req.data(), MPI_STATUSES_IGNORE);
+    MPI_Waitall(n, send_req.data(), MPI_STATUSES_IGNORE);
 }
 
 void logical_bug()
@@ -47,15 +47,16 @@ void logical_bug()
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
-    int n = 100;
-
+    int N = 100;
+    int n = N / num_procs;
+    std::vector<double> x(n, 1);
+    int sum = 0;
     for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; i++)
-        {
+        sum += x[i]*x[i];
+    int total_sum = 0;
+    MPI_Reduce(&sum, &total_sum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
-        }
-    }
+    if (rank == 0) printf("Sum %d\n", total_sum);
 }
 
 int main(int argc, char* argv[])
@@ -66,7 +67,9 @@ int main(int argc, char* argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
-    segfault_bug();
+    //segfault_bug();
+
+    logical_bug();
 
     return MPI_Finalize();
 }
