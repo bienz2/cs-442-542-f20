@@ -5,21 +5,14 @@
 
 #include "../timer.h"
 #include "mat_readers/binary_IO.hpp"
-
-struct Mat 
-{
-    std::vector<int> rowptr;
-    std::vector<int> col_idx;
-    std::vector<double> data;
-    int n;
-    int nnz;
-};
+#include "sparse_mat.hpp"
 
 void spmv(int n, int* rowptr, int* col_idx, double* data, double* x, double* b)
 {
     int start, end, col;
     double val;
 
+#pragma omp parallel for schedule(runtime) private(start, end, col, val)
     for (int i = 0; i < n; i++)
     {
         b[i] = 0;

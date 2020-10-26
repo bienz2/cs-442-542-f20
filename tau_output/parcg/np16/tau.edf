@@ -1,0 +1,176 @@
+174 dynamic_trace_events
+# FunctionId Group Tag "Name Type" Parameters
+1 TAUEVENT 0 ".TAU <unknown event>" TriggerValue
+2 TAU_DEFAULT 0 ".TAU application " EntryExit
+101 TRACER 0 "CONT_EVENT" none
+25 TAUEVENT 0 "CPU Cores | 4" TriggerValue
+122 TAUEVENT 0 "CPU MHz | 2533.000" TriggerValue
+26 TAUEVENT 0 "CPU MHz | 2667.000" TriggerValue
+27 TAUEVENT 0 "CPU Type | Intel(R) Xeon(R) CPU X5550 @ 2.67GHz" TriggerValue
+28 TAUEVENT 0 "CPU Vendor | GenuineIntel" TriggerValue
+29 TAUEVENT 0 "CWD | /users/bienz/raptor/examples" TriggerValue
+30 TAUEVENT 0 "Cache Size | 8192 KB" TriggerValue
+31 TAUEVENT 0 "Command Line | ./benchmark_pcg" TriggerValue
+96 TRACER 0 "EV_INIT" none
+32 TAUEVENT 0 "Ending Timestamp | 1602693385230340" TriggerValue
+141 TAUEVENT 0 "Ending Timestamp | 1602693385250342" TriggerValue
+136 TAUEVENT 0 "Ending Timestamp | 1602693385250343" TriggerValue
+165 TAUEVENT 0 "Ending Timestamp | 1602693385250344" TriggerValue
+146 TAUEVENT 0 "Ending Timestamp | 1602693385250347" TriggerValue
+151 TAUEVENT 0 "Ending Timestamp | 1602693385257346" TriggerValue
+170 TAUEVENT 0 "Ending Timestamp | 1602693385264111" TriggerValue
+108 TAUEVENT 0 "Ending Timestamp | 1602693385264404" TriggerValue
+117 TAUEVENT 0 "Ending Timestamp | 1602693385270341" TriggerValue
+156 TAUEVENT 0 "Ending Timestamp | 1602693385270343" TriggerValue
+127 TAUEVENT 0 "Ending Timestamp | 1602693385290342" TriggerValue
+33 TAUEVENT 0 "Executable | /users/bienz/raptor/examples/benchmark_pcg" TriggerValue
+97 TRACER 0 "FLUSH" EntryExit
+98 TRACER 0 "FLUSH_CLOSE" none
+99 TRACER 0 "FLUSH_INITM" none
+34 TAUEVENT 0 "Hostname | wheeler-sn" TriggerValue
+35 TAUEVENT 0 "Local Time | 2020-10-14T10:36:21-06:00" TriggerValue
+103 TAU_MESSAGE -8 "MESSAGE_RECV" par
+102 TAU_MESSAGE -7 "MESSAGE_SEND" par
+36 TAUEVENT 0 "MPI Processor Name | wheeler-sn" TriggerValue
+6 MPI 0 "MPI_Allgather()  " EntryExit
+8 MPI 0 "MPI_Allreduce()  " EntryExit
+15 MPI 0 "MPI_Comm_free()  " EntryExit
+4 MPI 0 "MPI_Comm_rank()  " EntryExit
+5 MPI 0 "MPI_Comm_size()  " EntryExit
+7 MPI 0 "MPI_Comm_split()  " EntryExit
+16 MPI 0 "MPI_Finalize()  " EntryExit
+11 MPI 0 "MPI_Get_count()  " EntryExit
+3 MPI 0 "MPI_Init()  " EntryExit
+14 MPI 0 "MPI_Irecv()  " EntryExit
+9 MPI 0 "MPI_Isend()  " EntryExit
+10 MPI 0 "MPI_Probe()  " EntryExit
+12 MPI 0 "MPI_Recv()  " EntryExit
+13 MPI 0 "MPI_Waitall()  " EntryExit
+37 TAUEVENT 0 "Memory Size | 49282560 kB" TriggerValue
+18 TAUEVENT 0 "Message size for all-gather" TriggerValue
+19 TAUEVENT 0 "Message size for all-reduce" TriggerValue
+21 TAUEVENT 0 "Message size received from all nodes" TriggerValue
+23 TAUEVENT 0 "Message size received in wait : MPI_Waitall()  " TriggerValue
+22 TAUEVENT 0 "Message size received in wait" TriggerValue
+20 TAUEVENT 0 "Message size sent to all nodes" TriggerValue
+38 TAUEVENT 0 "Node Name | wheeler-sn" TriggerValue
+39 TAUEVENT 0 "OS Machine | x86_64" TriggerValue
+40 TAUEVENT 0 "OS Name | Linux" TriggerValue
+41 TAUEVENT 0 "OS Release | 3.10.0-1062.18.1.el7.x86_64" TriggerValue
+42 TAUEVENT 0 "OS Version | #1 SMP Tue Mar 17 23:49:17 UTC 2020" TriggerValue
+161 TAUEVENT 0 "Starting Timestamp | 1602693381949656" TriggerValue
+147 TAUEVENT 0 "Starting Timestamp | 1602693381953081" TriggerValue
+123 TAUEVENT 0 "Starting Timestamp | 1602693381955628" TriggerValue
+152 TAUEVENT 0 "Starting Timestamp | 1602693381957864" TriggerValue
+109 TAUEVENT 0 "Starting Timestamp | 1602693381962463" TriggerValue
+118 TAUEVENT 0 "Starting Timestamp | 1602693381963233" TriggerValue
+142 TAUEVENT 0 "Starting Timestamp | 1602693381967164" TriggerValue
+171 TAUEVENT 0 "Starting Timestamp | 1602693381967466" TriggerValue
+157 TAUEVENT 0 "Starting Timestamp | 1602693381968404" TriggerValue
+128 TAUEVENT 0 "Starting Timestamp | 1602693381968421" TriggerValue
+132 TAUEVENT 0 "Starting Timestamp | 1602693381969487" TriggerValue
+113 TAUEVENT 0 "Starting Timestamp | 1602693381974093" TriggerValue
+104 TAUEVENT 0 "Starting Timestamp | 1602693381975004" TriggerValue
+137 TAUEVENT 0 "Starting Timestamp | 1602693381975248" TriggerValue
+43 TAUEVENT 0 "Starting Timestamp | 1602693381977629" TriggerValue
+166 TAUEVENT 0 "Starting Timestamp | 1602693381982887" TriggerValue
+44 TAUEVENT 0 "TAU Architecture | default" TriggerValue
+45 TAUEVENT 0 "TAU Config |  -mpi" TriggerValue
+46 TAUEVENT 0 "TAU Makefile | /users/bienz/tau/x86_64/lib/Makefile.tau-mpi" TriggerValue
+47 TAUEVENT 0 "TAU Version | 2.29.1-git" TriggerValue
+48 TAUEVENT 0 "TAU_BFD_LOOKUP | on" TriggerValue
+49 TAUEVENT 0 "TAU_CALLPATH_DEPTH | 2" TriggerValue
+50 TAUEVENT 0 "TAU_CALLSITE_DEPTH | 1" TriggerValue
+51 TAUEVENT 0 "TAU_COMM_MATRIX | off" TriggerValue
+52 TAUEVENT 0 "TAU_CUDA_BINARY_EXE | " TriggerValue
+53 TAUEVENT 0 "TAU_CUPTI_API | runtime" TriggerValue
+54 TAUEVENT 0 "TAU_EBS_KEEP_UNRESOLVED_ADDR | off" TriggerValue
+55 TAUEVENT 0 "TAU_IBM_BG_HWP_COUNTERS | off" TriggerValue
+56 TAUEVENT 0 "TAU_MAX_THREADS | 1" TriggerValue
+57 TAUEVENT 0 "TAU_MEASURE_TAU | off" TriggerValue
+58 TAUEVENT 0 "TAU_MEMDBG_PROTECT_ABOVE | off" TriggerValue
+59 TAUEVENT 0 "TAU_MEMDBG_PROTECT_BELOW | off" TriggerValue
+60 TAUEVENT 0 "TAU_MEMDBG_PROTECT_FREE | off" TriggerValue
+61 TAUEVENT 0 "TAU_OPENMP_RUNTIME | on" TriggerValue
+62 TAUEVENT 0 "TAU_OPENMP_RUNTIME_EVENTS | on" TriggerValue
+63 TAUEVENT 0 "TAU_OPENMP_RUNTIME_STATES | off" TriggerValue
+64 TAUEVENT 0 "TAU_OUTPUT_CUDA_CSV | off" TriggerValue
+65 TAUEVENT 0 "TAU_PAPI_MULTIPLEXING | off" TriggerValue
+66 TAUEVENT 0 "TAU_PROFILE | off" TriggerValue
+67 TAUEVENT 0 "TAU_PROFILE_FORMAT | profile" TriggerValue
+68 TAUEVENT 0 "TAU_RECYCLE_THREADS | off" TriggerValue
+69 TAUEVENT 0 "TAU_REGION_ADDRESSES | off" TriggerValue
+70 TAUEVENT 0 "TAU_SAMPLING | off" TriggerValue
+71 TAUEVENT 0 "TAU_SHOW_MEMORY_FUNCTIONS | off" TriggerValue
+72 TAUEVENT 0 "TAU_SIGNALS_GDB | off" TriggerValue
+73 TAUEVENT 0 "TAU_SYNCHRONIZE_CLOCKS | on" TriggerValue
+74 TAUEVENT 0 "TAU_THROTTLE | on" TriggerValue
+75 TAUEVENT 0 "TAU_THROTTLE_NUMCALLS | 100000" TriggerValue
+76 TAUEVENT 0 "TAU_THROTTLE_PERCALL | 10" TriggerValue
+77 TAUEVENT 0 "TAU_TRACE | on" TriggerValue
+78 TAUEVENT 0 "TAU_TRACE_FORMAT | tau" TriggerValue
+79 TAUEVENT 0 "TAU_TRACK_CUDA_CDP | off" TriggerValue
+80 TAUEVENT 0 "TAU_TRACK_CUDA_ENV | off" TriggerValue
+81 TAUEVENT 0 "TAU_TRACK_CUDA_INSTRUCTIONS | " TriggerValue
+82 TAUEVENT 0 "TAU_TRACK_CUDA_SASS | off" TriggerValue
+83 TAUEVENT 0 "TAU_TRACK_HEADROOM | off" TriggerValue
+84 TAUEVENT 0 "TAU_TRACK_HEAP | off" TriggerValue
+85 TAUEVENT 0 "TAU_TRACK_IO_PARAMS | off" TriggerValue
+86 TAUEVENT 0 "TAU_TRACK_MEMORY_FOOTPRINT | off" TriggerValue
+87 TAUEVENT 0 "TAU_TRACK_MEMORY_LEAKS | off" TriggerValue
+88 TAUEVENT 0 "TAU_TRACK_MESSAGE | on" TriggerValue
+89 TAUEVENT 0 "TAU_TRACK_SIGNALS | off" TriggerValue
+90 TAUEVENT 0 "TAU_TRACK_UNIFIED_MEMORY | off" TriggerValue
+24 TAUEVENT 0 "TauTraceClockOffsetEnd" TriggerValue
+17 TAUEVENT 0 "TauTraceClockOffsetStart" TriggerValue
+162 TAUEVENT 0 "Timestamp | 1602693381949793" TriggerValue
+148 TAUEVENT 0 "Timestamp | 1602693381953225" TriggerValue
+124 TAUEVENT 0 "Timestamp | 1602693381955760" TriggerValue
+153 TAUEVENT 0 "Timestamp | 1602693381957989" TriggerValue
+110 TAUEVENT 0 "Timestamp | 1602693381962594" TriggerValue
+119 TAUEVENT 0 "Timestamp | 1602693381963385" TriggerValue
+143 TAUEVENT 0 "Timestamp | 1602693381967291" TriggerValue
+172 TAUEVENT 0 "Timestamp | 1602693381967580" TriggerValue
+158 TAUEVENT 0 "Timestamp | 1602693381968527" TriggerValue
+129 TAUEVENT 0 "Timestamp | 1602693381968540" TriggerValue
+133 TAUEVENT 0 "Timestamp | 1602693381969604" TriggerValue
+114 TAUEVENT 0 "Timestamp | 1602693381974221" TriggerValue
+105 TAUEVENT 0 "Timestamp | 1602693381975124" TriggerValue
+138 TAUEVENT 0 "Timestamp | 1602693381975430" TriggerValue
+91 TAUEVENT 0 "Timestamp | 1602693381977737" TriggerValue
+167 TAUEVENT 0 "Timestamp | 1602693381983005" TriggerValue
+92 TAUEVENT 0 "UTC Time | 2020-10-14T16:36:21Z" TriggerValue
+100 TRACER 0 "WALL_CLOCK" none
+149 TAUEVENT 0 "pid | 3659" TriggerValue
+163 TAUEVENT 0 "pid | 3671" TriggerValue
+125 TAUEVENT 0 "pid | 3683" TriggerValue
+154 TAUEVENT 0 "pid | 3692" TriggerValue
+144 TAUEVENT 0 "pid | 3711" TriggerValue
+111 TAUEVENT 0 "pid | 3714" TriggerValue
+134 TAUEVENT 0 "pid | 3716" TriggerValue
+120 TAUEVENT 0 "pid | 3717" TriggerValue
+173 TAUEVENT 0 "pid | 3719" TriggerValue
+130 TAUEVENT 0 "pid | 3730" TriggerValue
+159 TAUEVENT 0 "pid | 3731" TriggerValue
+115 TAUEVENT 0 "pid | 3737" TriggerValue
+139 TAUEVENT 0 "pid | 3745" TriggerValue
+106 TAUEVENT 0 "pid | 3746" TriggerValue
+93 TAUEVENT 0 "pid | 3749" TriggerValue
+168 TAUEVENT 0 "pid | 3753" TriggerValue
+150 TAUEVENT 0 "tid | 3659" TriggerValue
+164 TAUEVENT 0 "tid | 3671" TriggerValue
+126 TAUEVENT 0 "tid | 3683" TriggerValue
+155 TAUEVENT 0 "tid | 3692" TriggerValue
+145 TAUEVENT 0 "tid | 3711" TriggerValue
+112 TAUEVENT 0 "tid | 3714" TriggerValue
+135 TAUEVENT 0 "tid | 3716" TriggerValue
+121 TAUEVENT 0 "tid | 3717" TriggerValue
+174 TAUEVENT 0 "tid | 3719" TriggerValue
+131 TAUEVENT 0 "tid | 3730" TriggerValue
+160 TAUEVENT 0 "tid | 3731" TriggerValue
+116 TAUEVENT 0 "tid | 3737" TriggerValue
+140 TAUEVENT 0 "tid | 3745" TriggerValue
+107 TAUEVENT 0 "tid | 3746" TriggerValue
+94 TAUEVENT 0 "tid | 3749" TriggerValue
+169 TAUEVENT 0 "tid | 3753" TriggerValue
+95 TAUEVENT 0 "username | bienz" TriggerValue
