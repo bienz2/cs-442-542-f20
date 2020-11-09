@@ -8,9 +8,9 @@ __global__ void print_kernel()
 
 int main()
 {
-    print_kernel<<<10,10>>>();
-//    cudaDeviceSynchronize();
     cudaDeviceReset();
-
+    print_kernel<<<10,10>>>();
+    cudaError_t err = cudaDeviceSynchronize();
+    printf("Error %s\n", cudaGetErrorString(err));
     return 0;
 }

@@ -6,8 +6,6 @@ void vecAddKernel(float* A, float* B, float* C, int n)
 {
     int i = blockDim.x*blockIdx.x + threadIdx.x;
     if (i < n) C[i] = A[i] + B[i];
-
-printf("i %d\n", i);
 }
 
 void vecAdd(float* h_A, float* h_B, float* h_C, int n)
@@ -52,8 +50,6 @@ int main(int argc, char* argv[])
     cudaMalloc((void**)&d_B, n*sizeof(float));
     cudaMalloc((void**)&d_C, n*sizeof(float));
 
-
-printf("h_A[0] %f\n", h_A[0]);
     // Copy A and B to device memory
     cudaMemcpy(d_A, h_A, n*sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_B, h_B, n*sizeof(float), cudaMemcpyHostToDevice);
@@ -63,11 +59,12 @@ printf("h_A[0] %f\n", h_A[0]);
     vecAddKernel<<<ceil(n/256.0), 256>>>(d_A, d_B, d_C, n);
     tfinal = get_time() - t0;
 
+    cudaError_t err = cudaGetLastError();
+    if (err != cudaSuccess) printf("Error %s\n", cudaGetErrorString(err));
+
     // Copy C back to host memory
-printf("h_c[0] %f\n", h_C[0]);
     cudaMemcpy(h_C, d_C, n*sizeof(float), cudaMemcpyDeviceToHost);
 
-printf("h_C[0] %f\n", h_C[0]);
     printf("VecAddKernel Time %e, SumC %e\n", tfinal, sum(n, h_C));
 
     // Free device memory
