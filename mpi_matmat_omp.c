@@ -5,7 +5,7 @@
 #include <time.h>
 #include <math.h>
 
-void matmat_omp(double* A, double* B, double* C, int first_n, int last_n, int n)
+void matmat(double* A, double* B, double* C, int first_n, int last_n, int n)
 {
     double val;
     for (int i = first_n; i < last_n; i++)
@@ -120,7 +120,7 @@ void cannon(int n, double* A, double* B, double** C_ptr)
         }
 
         #pragma omp barrier
-        matmat_omp(recv_A, recv_B, C, first_n, last_n, n);
+        matmat(recv_A, recv_B, C, first_n, last_n, n);
         #pragma omp barrier
 
         recv_A = A3;
