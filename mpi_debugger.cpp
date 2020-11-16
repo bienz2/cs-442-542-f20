@@ -4,6 +4,7 @@
 #include <time.h>
 #include <math.h>
 #include <vector>
+#include <unistd.h>
 
 void segfault_bug()
 {
@@ -68,6 +69,13 @@ int main(int argc, char* argv[])
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
     //segfault_bug();
+    //
+    
+    int a = 0;
+    while (a)
+    { 
+        sleep(5);
+    }
 
     logical_bug();
 

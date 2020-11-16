@@ -4,20 +4,20 @@
 #include <time.h>
 #include <math.h>
 
-
 // Serial matrix-matrix multiplication
 void matmat(int n, double* A, double* B, double* C)
 {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    int i, j, k;
 
     double val;
-    for (int i = 0; i < n; i++)
+    for (i = 0; i < n; i++)
     {
-        for (int j = 0; j < n; j++)
+        for (j = 0; j < n; j++)
         {
             val = A[i*n+j];
-            for (int k = 0; k < n; k++)
+            for (k = 0; k < n; k++)
             {
                 C[i*n+k] += val * B[j*n+k];
             }
@@ -44,20 +44,21 @@ void par_matmat(int n, double* A, double* B, double** C_ptr)
     int proc;
     int tag_a = 1234;
     int tag_b = 4321;
+    int i, j;
 
     // Multiply Serial
     double* C;
     C = (double*)malloc(n*n*sizeof(double));
-    for (int i = 0; i < n*n; i++)
+    for (i = 0; i < n*n; i++)
         C[i] = 0;
 
     // Send local A to all processes in row 
     double* a_send_buf = (double*)malloc(sq_num_procs*n*n*sizeof(double));
     MPI_Request* a_req = (MPI_Request*)malloc(sq_num_procs*sizeof(MPI_Request));
-    for (int i = 0; i < sq_num_procs; i++)
+    for (i = 0; i < sq_num_procs; i++)
     {
         proc = first_rank_row + i;
-        for (int j = 0; j < n*n; j++)
+        for (j = 0; j < n*n; j++)
             a_send_buf[i*n*n+j] = A[j];
         MPI_Isend(&(a_send_buf[i*n*n]), n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &(a_req[i]));
     }
@@ -65,10 +66,10 @@ void par_matmat(int n, double* A, double* B, double** C_ptr)
     // Send local B to all processes in col
     double* b_send_buf = (double*)malloc(sq_num_procs*n*n*sizeof(double));
     MPI_Request* b_req = (MPI_Request*)malloc(sq_num_procs*sizeof(MPI_Request));
-    for (int i = 0; i < sq_num_procs; i++)
+    for (i = 0; i < sq_num_procs; i++)
     {
         proc = i*sq_num_procs + rank_col;
-        for (int j = 0; j < n*n; j++)
+        for (j = 0; j < n*n; j++)
             b_send_buf[i*n*n+j] = B[j];
         MPI_Isend(&(b_send_buf[i*n*n]), n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &(b_req[i]));
     }
@@ -77,7 +78,7 @@ void par_matmat(int n, double* A, double* B, double** C_ptr)
     // Recv parts of A and B
     double* recv_A = (double*)malloc(n*n*sizeof(double));
     double* recv_B = (double*)malloc(n*n*sizeof(double));
-    for (int i = 0; i < sq_num_procs; i++)
+    for (i = 0; i < sq_num_procs; i++)
     {
         // Recv a from row proc
         proc = first_rank_row+i;
@@ -115,10 +116,12 @@ void cannon(int n, double* A, double* B, double** C_ptr)
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
+    int i, j;
+
     double* C = (double*)malloc(n*n*sizeof(double));
-    for (int i = 0; i < n; i++)
+    for (i = 0; i < n; i++)
     {
-        for (int j = 0; j < n; j++)
+        for (j = 0; j < n; j++)
         {
             C[i*n+j] = 0;
         }
@@ -193,7 +196,7 @@ void cannon(int n, double* A, double* B, double** C_ptr)
     send_B = B2;
 
     int n_shifts = sq_num_procs - 1;
-    for (int i = 0; i < n_shifts; i++)
+    for (i = 0; i < n_shifts; i++)
     {
         // Recv A from neighbor
         proc_col = rank_col - 1;
@@ -250,9 +253,10 @@ void cannon(int n, double* A, double* B, double** C_ptr)
 double mat_sum(int n, double* C)
 {
     double sum = 0;
-    for (int i = 0; i < n; i++)
+    int i, j;
+    for (i = 0; i < n; i++)
     {
-        for (int j = 0; j < n; j++)
+        for (j = 0; j < n; j++)
         {
             sum += C[i*n+j];
         }
@@ -281,9 +285,10 @@ int main(int argc, char* argv[])
     srand(rank*time(NULL));
     int first_i = rank_row*N;
     int first_j = rank_col;
-    for (int i = 0; i < n; i++)
+    int i, j;
+    for (i = 0; i < n; i++)
     {
-        for (int j = 0; j < n; j++)
+        for (j = 0; j < n; j++)
         {
             A[i*n+j] = ((rank_row*n)+i)*N + (rank_col*n)+j+1;
             B[i*n+j] = ((rank_row*n)+i)*N + (rank_col*n)+j+1;
@@ -305,7 +310,7 @@ int main(int argc, char* argv[])
     if (rank == 0) printf("Elapsed Time %e\n", start);
     free(C);
 
-    // Time Cannon's Method
+    // Time Cannon's Method/
     MPI_Barrier(MPI_COMM_WORLD);
     start = MPI_Wtime();
     cannon(n, A, B, &C);

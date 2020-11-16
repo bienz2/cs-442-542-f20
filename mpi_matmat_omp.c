@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <mpi.h>
+#include <omp.h>
 #include <time.h>
 #include <math.h>
-
 
 // Serial matrix-matrix multiplication
 void matmat(int n, double* A, double* B, double* C)
@@ -12,6 +12,8 @@ void matmat(int n, double* A, double* B, double* C)
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     double val;
+
+    #pragma omp parallel for private(val)
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
@@ -23,14 +25,22 @@ void matmat(int n, double* A, double* B, double* C)
             }
         }
     }
- 
 }
 
-// Shift A 'rank_row' columns
-// Shift B 'rank_col' rows
-// All pairs of A and B on a single process should be multiplied
-// Then, send submatrix of A to neighboring process (rowwise)
-// and submatrix of B to neighboring process (columnwise)
+void matmat_omp(double* A, double* B, double* C, int first_n, int last_n, int n)
+{
+    double val;
+    for (int i = first_n; i < last_n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            val = A[i*n+j];
+            for (int k = 0; k < n; k++)
+                C[i*n+k] += val * B[j*n+k];
+        }
+    }
+}
+
 void cannon(int n, double* A, double* B, double** C_ptr)
 {
     int rank, num_procs;
@@ -38,20 +48,10 @@ void cannon(int n, double* A, double* B, double** C_ptr)
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
     double* C = (double*)malloc(n*n*sizeof(double));
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            C[i*n+j] = 0;
-        }
-    }
-
-    // Define other matrices to hold A and B
     double* A2 = (double*)malloc(n*n*sizeof(double));
     double* B2 = (double*)malloc(n*n*sizeof(double));
     double* A3 = (double*)malloc(n*n*sizeof(double));
     double* B3 = (double*)malloc(n*n*sizeof(double));
-
     double* send_A = A;
     double* send_B = B;
     double* recv_A = A2;
@@ -66,100 +66,141 @@ void cannon(int n, double* A, double* B, double** C_ptr)
     int proc_row, proc_col;
     int tag_a = 1234;
     int tag_b = 4321;
+    int first_n, last_n;
 
     MPI_Request send_req_a, send_req_b, recv_req_a, recv_req_b;
 
-    // Cannon Shift:
-    // Recv A
-    shift = rank_row;
-    proc_col = rank_col - shift;
-    if (proc_col < 0) proc_col += sq_num_procs;
-    proc = rank_row * sq_num_procs + proc_col;
-    MPI_Irecv(recv_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &recv_req_a);
-    
-    // Recv B
-    shift = rank_col;
-    proc_row = rank_row - shift;
-    if (proc_row < 0) proc_row += sq_num_procs;
-    proc = proc_row * sq_num_procs + rank_col;
-    MPI_Irecv(recv_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &recv_req_b);
-
-    // Send A 
-    shift = rank_row;
-    proc_col = rank_col + shift;
-    if (proc_col >= sq_num_procs) proc_col -= sq_num_procs;
-    proc = rank_row * sq_num_procs + proc_col;
-    MPI_Isend(send_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &send_req_a);
-
-    // Send B
-    shift = rank_col;
-    proc_row = rank_row + shift;
-    if (proc_row >= sq_num_procs) proc_row -= sq_num_procs;
-    proc = proc_row * sq_num_procs + rank_col;
-    MPI_Isend(send_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &send_req_b);
-
-    MPI_Wait(&send_req_a, MPI_STATUS_IGNORE);
-    MPI_Wait(&recv_req_a, MPI_STATUS_IGNORE);
-    MPI_Wait(&send_req_b, MPI_STATUS_IGNORE);
-    MPI_Wait(&recv_req_b, MPI_STATUS_IGNORE);
-
-    tag_a++;
-    tag_b++;
-
-    // After initial shift, can multiply pairs of matrices
-    matmat(n, recv_A, recv_B, C);
-
-    recv_A = A3;
-    recv_B = B3;
-    send_A = A2;
-    send_B = B2;
-
-    int n_shifts = sq_num_procs - 1;
-    for (int i = 0; i < n_shifts; i++)
+    #pragma omp parallel private(first_n, last_n)
     {
-        // Recv A from neighbor
-        proc_col = rank_col - 1;
-        if (proc_col < 0) proc_col += sq_num_procs;
-        proc = rank_row * sq_num_procs + proc_col;
-        MPI_Irecv(recv_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &recv_req_a);
+        int tid = omp_get_thread_num();
+
+        // Cannon Shift:
+        if (tid == 0)
+        {
+            // Recv A
+            shift = rank_row;
+            proc_col = rank_col - shift;
+            if (proc_col < 0) proc_col += sq_num_procs;
+            proc = rank_row * sq_num_procs + proc_col;
+            MPI_Irecv(recv_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &recv_req_a);
+    
+            // R1ecv B
+            shift = rank_col;
+            proc_row = rank_row - shift;
+            if (proc_row < 0) proc_row += sq_num_procs;
+            proc = proc_row * sq_num_procs + rank_col;
+            MPI_Irecv(recv_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &recv_req_b);
+
+            // Send A 
+            shift = rank_row;
+            proc_col = rank_col + shift;
+            if (proc_col >= sq_num_procs) proc_col -= sq_num_procs;
+            proc = rank_row * sq_num_procs + proc_col;
+            MPI_Isend(send_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &send_req_a);
+
+            // Send B
+            shift = rank_col;
+            proc_row = rank_row + shift;
+            if (proc_row >= sq_num_procs) proc_row -= sq_num_procs;
+            proc = proc_row * sq_num_procs + rank_col;
+            MPI_Isend(send_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &send_req_b);
+
+            MPI_Wait(&send_req_a, MPI_STATUS_IGNORE);
+            MPI_Wait(&recv_req_a, MPI_STATUS_IGNORE);
+            MPI_Wait(&send_req_b, MPI_STATUS_IGNORE);
+            MPI_Wait(&recv_req_b, MPI_STATUS_IGNORE);
+
+            tag_a++;
+            tag_b++;
+            first_n = 0;
+            last_n = 0;
+        }
+        else
+        {
+            int n_active = omp_get_num_threads() - 1;
+            int rank = tid-1;
+            int local_n = n / n_active;
+            first_n = local_n * rank;
+            int extra = n % n_active;
+            if (rank < extra)
+            {
+                local_n++;
+                first_n += rank;
+            } 
+            else first_n += extra;
+            last_n = first_n + local_n;
+
+            for (int i = first_n; i < last_n; i++) 
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    C[i*n+j] = 0;
+                }
+            }
+        }
+
+        #pragma omp barrier
+        matmat_omp(recv_A, recv_B, C, first_n, last_n, n);
+        #pragma omp barrier
+
+        recv_A = A3;
+        recv_B = B3;
+        send_A = A2;
+        send_B = B2;
+
+        int n_shifts = sq_num_procs - 1;
+        for (int i = 0; i < n_shifts; i++)
+        {
+            if (tid != 0)
+            {
+                matmat_omp(send_A, send_B, C, first_n, last_n, n);
+            }
+            else
+            {
+                // Recv A from neighbor
+                proc_col = rank_col - 1;
+                if (proc_col < 0) proc_col += sq_num_procs;
+                proc = rank_row * sq_num_procs + proc_col;
+                MPI_Irecv(recv_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &recv_req_a);
         
-        // Recv B from neighbor
-        proc_row = rank_row - 1;
-        if (proc_row < 0) proc_row += sq_num_procs;
-        proc = proc_row * sq_num_procs + rank_col;
-        MPI_Irecv(recv_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &recv_req_b);
+                // Recv B from neighbor
+                proc_row = rank_row - 1;
+                if (proc_row < 0) proc_row += sq_num_procs;
+                proc = proc_row * sq_num_procs + rank_col;
+                MPI_Irecv(recv_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &recv_req_b);
 
-        // Send A to neighbor
-        proc_col = rank_col + 1;
-        if (proc_col >= sq_num_procs) proc_col -= sq_num_procs;
-        proc = rank_row * sq_num_procs + proc_col;
-        MPI_Isend(send_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &send_req_a);
+                // Send A to neighbor
+                proc_col = rank_col + 1;
+                if (proc_col >= sq_num_procs) proc_col -= sq_num_procs;
+                proc = rank_row * sq_num_procs + proc_col;
+                MPI_Isend(send_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &send_req_a);
 
-        // Send B to neighbor
-        proc_row = rank_row + 1;
-        if (proc_row >= sq_num_procs) proc_row -= sq_num_procs;
-        proc = proc_row * sq_num_procs + rank_col;
-        MPI_Isend(send_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &send_req_b);  
+                // Send B to neighbor
+                proc_row = rank_row + 1;
+                if (proc_row >= sq_num_procs) proc_row -= sq_num_procs;
+                proc = proc_row * sq_num_procs + rank_col;
+                MPI_Isend(send_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &send_req_b);  
 
-        MPI_Wait(&send_req_a, MPI_STATUS_IGNORE);
-        MPI_Wait(&recv_req_a, MPI_STATUS_IGNORE);
-        MPI_Wait(&send_req_b, MPI_STATUS_IGNORE);
-        MPI_Wait(&recv_req_b, MPI_STATUS_IGNORE);
+                MPI_Wait(&send_req_a, MPI_STATUS_IGNORE);
+                MPI_Wait(&recv_req_a, MPI_STATUS_IGNORE);
+                MPI_Wait(&send_req_b, MPI_STATUS_IGNORE);
+                MPI_Wait(&recv_req_b, MPI_STATUS_IGNORE);
+                tag_a++;
+                tag_b++;
+            }
 
-        // After each step of communication, multiply locally recvd submatrices
-        matmat(n, recv_A, recv_B, C);
-
-        tag_a++;
-        tag_b++;
-
-        tmp = send_A;
-        send_A = recv_A;
-        recv_A = tmp;
-        tmp = send_B;
-        send_B = recv_B;
-        recv_B = tmp;
+            #pragma omp barrier
+        
+            tmp = send_A;
+            send_A = recv_A;
+            recv_A = tmp;
+            tmp = send_B;
+            send_B = recv_B;
+            recv_B = tmp;
+        }
+        matmat_omp(send_A, send_B, C, first_n, last_n, n);
+        #pragma omp barrier
     }
-
 
     free(recv_A);
     free(recv_B);
