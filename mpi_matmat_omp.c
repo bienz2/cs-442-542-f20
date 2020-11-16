@@ -181,7 +181,7 @@ void cannon(int n, double* A, double* B, double** C_ptr)
     free(A2);
     free(A3);
     free(B2);
-    free(Bb3);
+    free(B3);
 
     *C_ptr = C;
 }
