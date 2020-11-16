@@ -5,28 +5,6 @@
 #include <time.h>
 #include <math.h>
 
-// Serial matrix-matrix multiplication
-void matmat(int n, double* A, double* B, double* C)
-{
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-    double val;
-
-    #pragma omp parallel for private(val)
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            val = A[i*n+j];
-            for (int k = 0; k < n; k++)
-            {
-                C[i*n+k] += val * B[j*n+k];
-            }
-        }
-    }
-}
-
 void matmat_omp(double* A, double* B, double* C, int first_n, int last_n, int n)
 {
     double val;
@@ -52,27 +30,29 @@ void cannon(int n, double* A, double* B, double** C_ptr)
     double* B2 = (double*)malloc(n*n*sizeof(double));
     double* A3 = (double*)malloc(n*n*sizeof(double));
     double* B3 = (double*)malloc(n*n*sizeof(double));
-    double* send_A = A;
-    double* send_B = B;
-    double* recv_A = A2;
-    double* recv_B = B2;
-    double* tmp;
 
-    int sq_num_procs = sqrt(num_procs);
-    int rank_row = rank / sq_num_procs;
-    int rank_col = rank % sq_num_procs;
 
-    int proc, shift;
-    int proc_row, proc_col;
-    int tag_a = 1234;
-    int tag_b = 4321;
-    int first_n, last_n;
-
-    MPI_Request send_req_a, send_req_b, recv_req_a, recv_req_b;
-
-    #pragma omp parallel private(first_n, last_n)
+    #pragma omp parallel
     {
         int tid = omp_get_thread_num();
+
+        double* send_A = A;
+        double* send_B = B;
+        double* recv_A = A2;
+        double* recv_B = B2;
+        double* tmp;
+
+        int sq_num_procs = sqrt(num_procs);
+        int rank_row = rank / sq_num_procs;
+        int rank_col = rank % sq_num_procs;
+
+        int proc, shift;
+        int proc_row, proc_col;
+        int tag_a = 1234;
+        int tag_b = 4321;
+        int first_n, last_n;
+
+        MPI_Request send_req_a, send_req_b, recv_req_a, recv_req_b;omp_get_thread_num();
 
         // Cannon Shift:
         if (tid == 0)
@@ -151,11 +131,7 @@ void cannon(int n, double* A, double* B, double** C_ptr)
         int n_shifts = sq_num_procs - 1;
         for (int i = 0; i < n_shifts; i++)
         {
-            if (tid != 0)
-            {
-                matmat_omp(send_A, send_B, C, first_n, last_n, n);
-            }
-            else
+            if (tid == 0)
             {
                 // Recv A from neighbor
                 proc_col = rank_col - 1;
@@ -190,6 +166,8 @@ void cannon(int n, double* A, double* B, double** C_ptr)
             }
 
             #pragma omp barrier
+            matmat(recv_A, recv_B, C, first_n, last_n, n);
+            #pragma omp barrier
         
             tmp = send_A;
             send_A = recv_A;
@@ -198,8 +176,6 @@ void cannon(int n, double* A, double* B, double** C_ptr)
             send_B = recv_B;
             recv_B = tmp;
         }
-        matmat_omp(send_A, send_B, C, first_n, last_n, n);
-        #pragma omp barrier
     }
 
     free(recv_A);
