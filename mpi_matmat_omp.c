@@ -178,10 +178,10 @@ void cannon(int n, double* A, double* B, double** C_ptr)
         }
     }
 
-    free(recv_A);
-    free(recv_B);
-    free(send_A);
-    free(send_B);
+    free(A2);
+    free(A3);
+    free(B2);
+    free(Bb3);
 
     *C_ptr = C;
 }
