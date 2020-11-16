@@ -120,13 +120,14 @@ void cannon(int n, double* A, double* B, double** C_ptr)
         }
 
         #pragma omp barrier
-        matmat(recv_A, recv_B, C, first_n, last_n, n);
-        #pragma omp barrier
 
         recv_A = A3;
         recv_B = B3;
         send_A = A2;
         send_B = B2;
+
+        matmat(send_A, send_B, C, first_n, last_n, n);
+        #pragma omp barrier
 
         int n_shifts = sq_num_procs - 1;
         for (int i = 0; i < n_shifts; i++)
@@ -166,8 +167,6 @@ void cannon(int n, double* A, double* B, double** C_ptr)
             }
 
             #pragma omp barrier
-            matmat(recv_A, recv_B, C, first_n, last_n, n);
-            #pragma omp barrier
         
             tmp = send_A;
             send_A = recv_A;
@@ -175,6 +174,9 @@ void cannon(int n, double* A, double* B, double** C_ptr)
             tmp = send_B;
             send_B = recv_B;
             recv_B = tmp;
+            
+            matmat(send_A, send_B, C, first_n, last_n, n);
+            #pragma omp barrier
         }
     }
 
