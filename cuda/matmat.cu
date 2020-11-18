@@ -57,10 +57,10 @@ int main(int argc, char* argv[])
         h_B[i] = 0.2;
     }
 
-    t0 = get_time();
-    matrixMult(h_A, h_B, h_C, n);
-    tfinal = get_time() - t0;
-    printf("MatrixMult Time %e, Sum %e\n", tfinal, sum(h_C, n));
+    //t0 = get_time();
+    //matrixMult(h_A, h_B, h_C, n);
+    //tfinal = get_time() - t0;
+    //printf("MatrixMult Time %e, Sum %e\n", tfinal, sum(h_C, n));
 
    
     cudaMalloc((void**)&d_A, size);

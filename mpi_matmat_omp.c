@@ -19,7 +19,7 @@ void matmat(double* A, double* B, double* C, int first_n, int last_n, int n)
     }
 }
 
-void cannon(int n, double* A, double* B, double** C_ptr)
+void cannon(int n, double* A, double* B, double** C_ptr, int n_comm)
 {
     int rank, num_procs;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -41,6 +41,7 @@ void cannon(int n, double* A, double* B, double** C_ptr)
         double* recv_A = A2;
         double* recv_B = B2;
         double* tmp;
+        #pragma omp barrier
 
         int sq_num_procs = sqrt(num_procs);
         int rank_row = rank / sq_num_procs;
@@ -52,43 +53,59 @@ void cannon(int n, double* A, double* B, double** C_ptr)
         int tag_b = 4321;
         int first_n, last_n;
 
-        MPI_Request send_req_a, send_req_b, recv_req_a, recv_req_b;omp_get_thread_num();
+        MPI_Request send_req_a, send_req_b, recv_req_a, recv_req_b;
 
         // Cannon Shift:
-        if (tid == 0)
+        if (tid < n_comm)
         {
             // Recv A
-            shift = rank_row;
-            proc_col = rank_col - shift;
-            if (proc_col < 0) proc_col += sq_num_procs;
-            proc = rank_row * sq_num_procs + proc_col;
-            MPI_Irecv(recv_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &recv_req_a);
-    
-            // R1ecv B
-            shift = rank_col;
-            proc_row = rank_row - shift;
-            if (proc_row < 0) proc_row += sq_num_procs;
-            proc = proc_row * sq_num_procs + rank_col;
-            MPI_Irecv(recv_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &recv_req_b);
+            if ((tid) % n_comm == 0)
+            {
+                shift = rank_row;
+                proc_col = rank_col - shift;
+                if (proc_col < 0) proc_col += sq_num_procs;
+                proc = rank_row * sq_num_procs + proc_col;
+                MPI_Irecv(recv_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &recv_req_a);
+            }
+
+            // Recv B
+            if ((tid+1) % n_comm == 0)
+            {
+                shift = rank_col;
+                proc_row = rank_row - shift;
+                if (proc_row < 0) proc_row += sq_num_procs;
+                proc = proc_row * sq_num_procs + rank_col;
+                MPI_Irecv(recv_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &recv_req_b);
+            }
 
             // Send A 
-            shift = rank_row;
-            proc_col = rank_col + shift;
-            if (proc_col >= sq_num_procs) proc_col -= sq_num_procs;
-            proc = rank_row * sq_num_procs + proc_col;
-            MPI_Isend(send_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &send_req_a);
+            if ((tid+2) % n_comm == 0)
+            {
+                shift = rank_row;
+                proc_col = rank_col + shift;
+                if (proc_col >= sq_num_procs) proc_col -= sq_num_procs;
+                proc = rank_row * sq_num_procs + proc_col;
+                MPI_Isend(send_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &send_req_a);
+            }
 
             // Send B
-            shift = rank_col;
-            proc_row = rank_row + shift;
-            if (proc_row >= sq_num_procs) proc_row -= sq_num_procs;
-            proc = proc_row * sq_num_procs + rank_col;
-            MPI_Isend(send_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &send_req_b);
+            if ((tid+3) % n_comm == 0)
+            {
+                shift = rank_col;
+                proc_row = rank_row + shift;
+                if (proc_row >= sq_num_procs) proc_row -= sq_num_procs;
+                proc = proc_row * sq_num_procs + rank_col;
+                MPI_Isend(send_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &send_req_b);
+            }
 
-            MPI_Wait(&send_req_a, MPI_STATUS_IGNORE);
-            MPI_Wait(&recv_req_a, MPI_STATUS_IGNORE);
-            MPI_Wait(&send_req_b, MPI_STATUS_IGNORE);
-            MPI_Wait(&recv_req_b, MPI_STATUS_IGNORE);
+            if ((tid) % n_comm == 0)
+                MPI_Wait(&recv_req_a, MPI_STATUS_IGNORE);
+            if ((tid+1) % n_comm == 0)
+                MPI_Wait(&recv_req_b, MPI_STATUS_IGNORE);
+            if ((tid+2) % n_comm == 0)
+                MPI_Wait(&send_req_a, MPI_STATUS_IGNORE);
+            if ((tid+3) % n_comm == 0)
+                MPI_Wait(&send_req_b, MPI_STATUS_IGNORE);
 
             tag_a++;
             tag_b++;
@@ -97,8 +114,8 @@ void cannon(int n, double* A, double* B, double** C_ptr)
         }
         else
         {
-            int n_active = omp_get_num_threads() - 1;
-            int rank = tid-1;
+            int n_active = omp_get_num_threads() - n_comm;
+            int rank = tid - n_comm;
             int local_n = n / n_active;
             first_n = local_n * rank;
             int extra = n % n_active;
@@ -130,36 +147,52 @@ void cannon(int n, double* A, double* B, double** C_ptr)
         int n_shifts = sq_num_procs - 1;
         for (int i = 0; i < n_shifts; i++)
         {
-            if (tid == 0)
+            if (tid < n_comm)
             {
                 // Recv A from neighbor
-                proc_col = rank_col - 1;
-                if (proc_col < 0) proc_col += sq_num_procs;
-                proc = rank_row * sq_num_procs + proc_col;
-                MPI_Irecv(recv_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &recv_req_a);
+                if (tid % n_comm == 0)
+                {
+                    proc_col = rank_col - 1;
+                    if (proc_col < 0) proc_col += sq_num_procs;
+                    proc = rank_row * sq_num_procs + proc_col;
+                    MPI_Irecv(recv_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &recv_req_a);
+                }
         
                 // Recv B from neighbor
-                proc_row = rank_row - 1;
-                if (proc_row < 0) proc_row += sq_num_procs;
-                proc = proc_row * sq_num_procs + rank_col;
-                MPI_Irecv(recv_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &recv_req_b);
+                if ((tid+1) % n_comm == 0)
+                {
+                    proc_row = rank_row - 1;
+                    if (proc_row < 0) proc_row += sq_num_procs;
+                    proc = proc_row * sq_num_procs + rank_col;
+                    MPI_Irecv(recv_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &recv_req_b);
+                }
 
                 // Send A to neighbor
-                proc_col = rank_col + 1;
-                if (proc_col >= sq_num_procs) proc_col -= sq_num_procs;
-                proc = rank_row * sq_num_procs + proc_col;
-                MPI_Isend(send_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &send_req_a);
+                if ((tid+2) % n_comm == 0)
+                {
+                    proc_col = rank_col + 1;
+                    if (proc_col >= sq_num_procs) proc_col -= sq_num_procs;
+                    proc = rank_row * sq_num_procs + proc_col;
+                    MPI_Isend(send_A, n*n, MPI_DOUBLE, proc, tag_a, MPI_COMM_WORLD, &send_req_a);
+                }
 
                 // Send B to neighbor
-                proc_row = rank_row + 1;
-                if (proc_row >= sq_num_procs) proc_row -= sq_num_procs;
-                proc = proc_row * sq_num_procs + rank_col;
-                MPI_Isend(send_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &send_req_b);  
+                if ((tid+3) % n_comm == 0)
+                {
+                    proc_row = rank_row + 1;
+                    if (proc_row >= sq_num_procs) proc_row -= sq_num_procs;
+                    proc = proc_row * sq_num_procs + rank_col;
+                    MPI_Isend(send_B, n*n, MPI_DOUBLE, proc, tag_b, MPI_COMM_WORLD, &send_req_b);  
+                }
 
-                MPI_Wait(&send_req_a, MPI_STATUS_IGNORE);
+                if ((tid) % n_comm == 0)
                 MPI_Wait(&recv_req_a, MPI_STATUS_IGNORE);
-                MPI_Wait(&send_req_b, MPI_STATUS_IGNORE);
+                if ((tid+1) % n_comm == 0)
                 MPI_Wait(&recv_req_b, MPI_STATUS_IGNORE);
+                if ((tid+2) % n_comm == 0)
+                MPI_Wait(&send_req_a, MPI_STATUS_IGNORE);
+                if ((tid+3) % n_comm == 0)
+                MPI_Wait(&send_req_b, MPI_STATUS_IGNORE);
                 tag_a++;
                 tag_b++;
             }
@@ -205,11 +238,6 @@ double mat_sum(int n, double* C)
 
 int main(int argc, char* argv[])
 {
-    MPI_Init(&argc, &argv);
-    int rank, num_procs;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
-
     if (argc <= 1)
     {
         printf("Pass the matrix dimension (n for an nxn matrix) as a command line argument\n");
@@ -217,6 +245,20 @@ int main(int argc, char* argv[])
     }
 
     int N = atoi(argv[1]);
+    int n_comm = 1;
+    if (argc > 2) n_comm = atoi(argv[2]);
+
+    int provided;
+    if (n_comm == 1)
+        MPI_Init(&argc, &argv);
+    else MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
+
+
+    int rank, num_procs;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
+
+
     int sq_num_procs = sqrt(num_procs);
     int rank_row = rank / sq_num_procs;
     int first_rank_row = rank_row*sq_num_procs;
@@ -245,7 +287,7 @@ int main(int argc, char* argv[])
     // Time Cannon's Method
     MPI_Barrier(MPI_COMM_WORLD);
     start = MPI_Wtime();
-    cannon(n, A, B, &C);
+    cannon(n, A, B, &C, n_comm);
     end = MPI_Wtime() - start;
     sum_C = mat_sum(n, C);
     MPI_Reduce(&sum_C, &total_sum_C, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
@@ -253,7 +295,6 @@ int main(int argc, char* argv[])
     MPI_Reduce(&end, &start, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
     if (rank == 0) printf("Elapsed Time %e\n", start);
     free(C);
-
 
     free(A);
     free(B);
