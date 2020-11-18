@@ -251,6 +251,9 @@ double mat_sum(int n, double* C)
 
 int main(int argc, char* argv[])
 {
+    int provided;
+    MPI_Init_thread(&argc, &argv, MPI_THREAD_SERIALIZED, &provided);
+
     if (argc <= 1)
     {
         printf("Pass the matrix dimension (n for an nxn matrix) as a command line argument\n");
@@ -260,12 +263,6 @@ int main(int argc, char* argv[])
     int N = atoi(argv[1]);
     int n_comm = 1;
     if (argc > 2) n_comm = atoi(argv[2]);
-
-    int provided;
-    if (n_comm == 1)
-        MPI_Init(&argc, &argv);
-    else MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
-
 
     int rank, num_procs;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
