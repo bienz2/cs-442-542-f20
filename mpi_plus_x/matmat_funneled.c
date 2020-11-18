@@ -12,7 +12,7 @@ void matmat(int n, double* A, double* B, double* C)
     int i, j, k;
 
     double val;
-    #pragma omp parallel for private(val)
+    #pragma omp parallel for (i, j, k, val)
     for (i = 0; i < n; i++)
     {
         for (j = 0; j < n; j++)
