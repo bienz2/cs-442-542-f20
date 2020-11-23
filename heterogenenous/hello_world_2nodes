@@ -1,0 +1,29 @@
+Mon Nov 23 10:11:27 2020       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 455.23.05    Driver Version: 455.23.05    CUDA Version: 11.1     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  Tesla K40m          Off  | 00000000:04:00.0 Off |                    0 |
+| N/A   25C    P0    62W / 235W |      0MiB / 11441MiB |      0%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+|   1  Tesla K40m          Off  | 00000000:82:00.0 Off |                    0 |
+| N/A   26C    P0    65W / 235W |      0MiB / 11441MiB |     99%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+Num Nodes 2, Num GPUS 2
+Hello from MPI Rank 3 : block 0, thread 0
+Hello from MPI Rank 2 : block 0, thread 0
+Hello from MPI Rank 1 : block 0, thread 0
+Hello from MPI Rank 0 : block 0, thread 0

@@ -1,0 +1,35 @@
+Mon Nov 23 10:07:43 2020       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 455.23.05    Driver Version: 455.23.05    CUDA Version: 11.1     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  Tesla K40m          Off  | 00000000:04:00.0 Off |                    0 |
+| N/A   28C    P0    65W / 235W |      0MiB / 11441MiB |     75%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+
+Currently Loaded Modules:
+  1) gmp/6.1.2-zn55              9) hwloc/1.11.11-u6r55yb
+  2) zstd/1.4.5-3boi            10) slurm/20.02.04-okh3d6o
+  3) cuda/11.0.2-tyep           11) openmpi/2.1.5-vcstkl4
+  4) libpciaccess/0.16-edtwt6g  12) isl/0.18-igs5
+  5) libiconv/1.16-qazxaa4      13) mpfr/3.1.6-nol4
+  6) xz/5.2.5-rcyjfkv           14) mpc/1.1.0-kv3z
+  7) libxml2/2.9.10-3foymu4     15) zlib/1.2.11-pkmj
+  8) numactl/2.0.12-5pz4h3p     16) gcc/8.3.0-wbma
+
+ 
+
+Num Gpus 1
+Hello from MPI Rank 0 : block 0, thread 0
