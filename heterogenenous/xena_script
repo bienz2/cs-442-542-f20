@@ -16,5 +16,5 @@ module load gcc/8.3.0-wbma
 nvidia-smi
 
 cd /users/bienz/cs-442-542-f20/heterogenenous
-mpirun -n 16 ./vecadd 100000000
+mpirun -n 16 ./hello_world
  
