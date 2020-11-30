@@ -1,0 +1,63 @@
+Mon Nov 30 10:14:39 2020       
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 455.23.05    Driver Version: 455.23.05    CUDA Version: 11.1     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  Tesla K40m          Off  | 00000000:04:00.0 Off |                    0 |
+| N/A   26C    P0    61W / 235W |      0MiB / 11441MiB |      0%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+|   1  Tesla K40m          Off  | 00000000:82:00.0 Off |                    0 |
+| N/A   25C    P0    64W / 235W |      0MiB / 11441MiB |     72%      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+                                                                               
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+mca:mpi:base:param:mpi_built_with_cuda_support:value:false
+MPI Matmat n=1024
+SumC 2.952445e+20
+Elapsed Time 9.131379e-01
+
+MPI Matmat PPN 8 n=1024
+SumC 2.951725e+20
+Elapsed Time 2.979303e-01
+
+MPI + CUDA Matmat n=1024
+SumC 2.952445e+20
+Elapsed Time 3.975533e+00
+
+
+MPI Matmat n=2048
+SumC 3.778510e+22
+Elapsed Time 7.163615e+00
+
+MPI Matmat PPN 8 n=2048
+SumC 3.778049e+22
+Elapsed Time 2.404464e+00
+
+MPI + CUDA Matmat n=2048
+SumC 3.778510e+22
+Elapsed Time 4.140705e+00
+
+
+MPI Matmat n=4096
+SumC 4.836097e+24
+Elapsed Time 5.780822e+01
+
+MPI Matmat PPN 8 n=4096
+SumC 4.835802e+24
+Elapsed Time 1.788632e+01
+
+MPI + CUDA Matmat n=4096
+SumC 4.836097e+24
+Elapsed Time 4.945736e+00
+
